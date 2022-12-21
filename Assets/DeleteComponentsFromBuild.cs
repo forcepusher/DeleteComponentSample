@@ -18,8 +18,8 @@ public class DeleteComponentsFromBuild : IProcessSceneWithReport
         }
 
         var deletionComponents = Resources.FindObjectsOfTypeAll(typeof(DeleteSpecificComponentsFromBuild));
-        foreach (var deletionComponent in deletionComponents)
-            ((DeleteSpecificComponentsFromBuild)deletionComponent).DeleteComponents();
+        foreach (DeleteSpecificComponentsFromBuild deletionComponent in deletionComponents)
+            deletionComponent.DeleteComponents();
     }
 
     private void DeleteComponents(Transform transform, string componentName)

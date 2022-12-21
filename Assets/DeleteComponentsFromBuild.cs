@@ -8,14 +8,18 @@ public class DeleteComponentsFromBuild : IProcessSceneWithReport
 {
     public int callbackOrder { get { return 0; } }
 
+    private readonly string[] _uselessComponentNames = new string[]
+    {
+        "ExtremelyUselessComponent",
+        "AnotherUselessComponentThatMightNotExist",
+        "TweakThisListOfComponentsInCodeDirectly"
+    };
+
     public void OnProcessScene(Scene scene, BuildReport report)
     {
         foreach (GameObject rootGameObject in scene.GetRootGameObjects())
-        {
-            DeleteComponents(rootGameObject.transform, "ExtremelyUselessComponent");
-            DeleteComponents(rootGameObject.transform, "AnotherUselessComponentThatMightNotExist");
-            DeleteComponents(rootGameObject.transform, "TweakThisListOfComponentsInCodeDirectly");
-        }
+            foreach(string uselessComponentName in _uselessComponentNames)
+                DeleteComponents(rootGameObject.transform, uselessComponentName);
 
         Object[] deletionComponents = Resources.FindObjectsOfTypeAll(typeof(DeleteSpecificComponentsFromBuild));
         foreach (DeleteSpecificComponentsFromBuild deletionComponent in deletionComponents)

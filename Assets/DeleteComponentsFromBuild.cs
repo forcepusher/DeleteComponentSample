@@ -17,7 +17,7 @@ public class DeleteComponentsFromBuild : IProcessSceneWithReport
             DeleteComponents(rootGameObject.transform, "TweakThisListOfComponentsInCodeDirectly");
         }
 
-        var deletionComponents = Resources.FindObjectsOfTypeAll(typeof(DeleteSpecificComponentsFromBuild));
+        Object[] deletionComponents = Resources.FindObjectsOfTypeAll(typeof(DeleteSpecificComponentsFromBuild));
         foreach (DeleteSpecificComponentsFromBuild deletionComponent in deletionComponents)
             deletionComponent.DeleteComponents();
     }

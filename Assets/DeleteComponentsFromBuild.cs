@@ -1,23 +1,35 @@
 #if UNITY_EDITOR
-using System.Collections.Generic;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DeleteComponentsFromBuild : MonoBehaviour, IProcessSceneWithReport
+public class DeleteComponentsFromBuild : IProcessSceneWithReport
 {
-    [SerializeField]
-    private List<Component> _componentsToDelete = new List<Component>();
-
     public int callbackOrder { get { return 0; } }
 
     public void OnProcessScene(Scene scene, BuildReport report)
     {
-        foreach (Component componentToDelete in _componentsToDelete)
-            DestroyImmediate(componentToDelete);
+        foreach (GameObject rootGameObject in scene.GetRootGameObjects())
+        {
+            DeleteComponents(rootGameObject.transform, "ExtremelyUselessComponent");
+            DeleteComponents(rootGameObject.transform, "AnotherUselessComponentThatMightNotExist");
+            DeleteComponents(rootGameObject.transform, "TweakThisListOfComponentsInCodeDirectly");
+        }
 
-        DestroyImmediate(this);
+        var deletionComponents = Resources.FindObjectsOfTypeAll(typeof(DeleteSpecificComponentsFromBuild));
+        foreach (var deletionComponent in deletionComponents)
+            ((DeleteSpecificComponentsFromBuild)deletionComponent).DeleteComponents();
+    }
+
+    private void DeleteComponents(Transform transform, string componentName)
+    {
+        var uselessComponent = transform.GetComponent(componentName);
+        if (uselessComponent != null)
+            Object.DestroyImmediate(uselessComponent);
+
+        foreach (Transform childTransform in transform)
+            DeleteComponents(childTransform, componentName);
     }
 }
 #endif
